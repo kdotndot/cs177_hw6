@@ -1,4 +1,4 @@
-import Crypto
+
 import random
 import hashlib
 import pyaes
@@ -35,11 +35,13 @@ def xor_hex(string1, hex2):
     return ans  
 
 
+
+
 """ p = int("B10B8F96A080E01DDE92DE5EAE5D54EC52C99FBCFB06A3C69A6A9DCA52D23B616073E28675A23D189838EF1E2EE652C013ECB4AEA906112324975C3CD49B83BFACCBDD7D90C4BD7098488E9C219A73724EFFD6FAE5644738FAA31A4FF55BCCC0A151AF5F0DC8B4BD45BF37DF365C1A65E68CFDA76D4DA708DF1FB2BC2E4A4371", 16)
 g = int("A4D1CBD5C3FD34126765A442EFB99905F8104DD258AC507FD6406CFF14266D31266FEA1E5C41564B777E690F5504F213160217B4B01B886A5E91547F9E2749F4D7FBD7D3B9A92EE1909D0D2263F80A76A6A24C087A091F531DBF0A0169B6A28AD662A4D18E73AFA32D779D5918D08BC8858F4DCEF97C2A24855E6EEB22B3B2E5", 16) """
 
 p = 37
-g = 5
+g = 1
 
 
 a = random.randint(0, p)
@@ -48,8 +50,8 @@ b = random.randint(0, p)
 A = pow(g, a, p) 
 B = pow(g, b, p)
 
-A = p
-B = p
+""" A = p
+B = p """
 
 
 s1 = pow(B, a, p)
@@ -58,6 +60,7 @@ s2 = pow(A, b, p)
 
 #Initializing AES 
 key = hashlib.sha256(bytes(s1)).hexdigest()
+print(key)
 key = bytes.fromhex(key[0:32])
 print(key)
 
@@ -86,7 +89,8 @@ for x in padded1:
         
     temp = aes.encrypt(temp)
     for y in temp:
-        encrypted1.append(hex(y)[2:])
+        """ encrypted1.append(hex(y)[2:]) """
+        encrypted1.append(y)
         
         
         
@@ -111,7 +115,33 @@ for x in padded2:
         
     temp = aes.encrypt(temp)
     for y in temp:
-        encrypted2.append(hex(y)[2:])        
+        """ encrypted2.append(hex(y)[2:])      """   
+        encrypted2.append(y)
 
-print(encrypted1)
-print(encrypted2)
+
+
+
+
+decrypted1 = aes.decrypt(encrypted1)
+decrypted2 = aes.decrypt(encrypted2)
+print(decrypted1)
+print(decrypted2)
+
+for x in range(len(decrypted1)):
+    decrypted1[x] = hex(decrypted1[x])[2:]
+
+for x in range(len(decrypted2)):
+    decrypted2[x] = hex(decrypted2[x])[2:]
+
+
+m1xored = xor_hex(iv, decrypted1)
+m2xored = xor_hex(iv, decrypted2)
+
+for x in range(len(m1xored)):
+    m1xored[x] = bytes.fromhex(m1xored[x]).decode("ASCII")
+    m2xored[x] = bytes.fromhex(m2xored[x]).decode("ASCII")
+
+print(m1xored)
+print(m2xored)
+
+    
